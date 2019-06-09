@@ -1,7 +1,6 @@
 package m.nathan.xerodegrees.ui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,17 +13,15 @@ import java.util.Date;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import m.nathan.xerodegrees.R;
 import m.nathan.xerodegrees.utils.InjectorUtils;
 
 public class MainActivity extends AppCompatActivity implements
-        LifecycleOwner, ForecastAdapter.ForecastAdapterOnItemClickHandler, SharedPreferences.OnSharedPreferenceChangeListener {
+        LifecycleOwner, ForecastAdapter.ForecastAdapterOnItemClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
     private ForecastAdapter mForecastAdapter;
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
@@ -42,9 +39,6 @@ public class MainActivity extends AppCompatActivity implements
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this);
 
         mForecastAdapter = new ForecastAdapter(this, this);
 
@@ -66,17 +60,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        //Check if preferences have been updated and apply changes
-        if (PREFERENCES_HAVE_BEEN_UPDATED) {
-            mForecastAdapter.notifyDataSetChanged();
-            PREFERENCES_HAVE_BEEN_UPDATED = false;
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.forecast, menu);
@@ -93,10 +76,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        PREFERENCES_HAVE_BEEN_UPDATED = true; }
 
     @Override
     public void onItemClick(Date date) {

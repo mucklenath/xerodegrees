@@ -65,5 +65,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             Intent intentToSync = new Intent(getActivity(), WeatherSyncIntentService.class);
             getActivity().startService(intentToSync);
         }
+        Preference preference = findPreference(key);
+        if (null != preference) {
+                setPreferenceSummary(preference, sharedPreferences.getString(key, ""));
+        }
     }
 }
